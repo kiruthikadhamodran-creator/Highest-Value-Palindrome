@@ -1,0 +1,46 @@
+def highestValuePalindrome(s, n, k):
+    s = list(s)
+    changed = [False] * n
+
+    # First pass: make palindrome
+    l, r = 0, n - 1
+    while l < r:
+        if s[l] != s[r]:
+            if s[l] > s[r]:
+                s[r] = s[l]
+            else:
+                s[l] = s[r]
+            changed[l] = changed[r] = True
+            k -= 1
+        l += 1
+        r -= 1
+
+    if k < 0:
+        return "-1"
+
+    # Second pass: maximize value
+    l, r = 0, n - 1
+    while l < r:
+        if s[l] != '9':
+            if changed[l] or changed[r]:
+                if k >= 1:
+                    s[l] = s[r] = '9'
+                    k -= 1
+            else:
+                if k >= 2:
+                    s[l] = s[r] = '9'
+                    k -= 2
+        l += 1
+        r -= 1
+
+    # Middle digit for odd length
+    if n % 2 == 1 and k > 0:
+        s[n // 2] = '9'
+
+    return ''.join(s)
+
+
+n, k = map(int, input().split())
+s = input().strip()
+
+print(highestValuePalindrome(s, n, k))
